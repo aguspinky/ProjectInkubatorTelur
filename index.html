@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Smart Home Dashboard – Telur Retak & Ikon Pro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto:wght@300&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #1e0a8f;
+      --panel: #1f1f2b;
+      --accent: #00e5ff;
+      --success: #00c853;
+      --danger: #ff1744;
+      --text: #e3e3e3;
+    }
+    body {
+      margin: 0; padding: 30px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Roboto', sans-serif;
+      display: flex; justify-content: center;
+    }
+    .dashboard {
+      width: 100%; max-width: 700px;
+      display: grid;
+      gap: 30px;
+      grid-template-columns: 1fr 1fr;
+    }
+    .header {
+      grid-column: span 2;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.8rem;
+      color: var(--accent);
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      user-select: none;
+    }
+    .header svg {
+      width: 45px;
+      height: 65px;
+      stroke: var(--accent);
+      fill: none;
+      stroke-width: 3;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+      animation: crackShake 3s ease-in-out infinite;
+      filter: drop-shadow(0 0 5px var(--accent));
+    }
+    @keyframes crackShake {
+      0%, 100% { transform: rotate(0deg) translateY(0); }
+      25% { transform: rotate(-4deg) translateY(-3px); }
+      50% { transform: rotate(4deg) translateY(2px); }
+      75% { transform: rotate(-2deg) translateY(-1px); }
+    }
+    .card {
+      background: var(--panel);
+      border-radius: 18px;
+      padding: 25px;
+      box-shadow: 0 6px 24px rgba(69, 16, 204, 0.7);
+      transition: transform 0.3s;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+    }
+    .card h2 {
+      margin: 0;
+      font-size: 1rem;
+      color: var(--accent);
+      letter-spacing: 1px;
+    }
+    .value {
+      font-size: 3rem;
+      margin-top: 10px;
+      color: var(--accent);
+    }
+    .status {
+      display: flex;
+      height: 150px;
+      gap: 20px;
+    }
+    .widget {
+      flex: 1;
+      background: var(--bg);
+      border-radius: 14px;
+      padding: 20px;
+      text-align: center;
+      border: 3px solid transparent;
+      transition: 0.4s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .widget.on {
+      border-color: var(--success);
+      box-shadow: 0 0 16px var(--success);
+    }
+    .widget.off {
+      border-color: var(--danger);
+      box-shadow: 0 0 12px var(--danger);
+    }
+    .icon-lampu {
+      width: 48px;
+      height: 80px;
+      fill: var(--text);
+      transition: fill 0.4s ease, filter 0.4s ease;
+    }
+    .widget.on .icon-lampu {
+      fill: var(--success);
+      filter: drop-shadow(0 0 8px var(--success)) drop-shadow(0 0 15px var(--success));
+      animation: glowLampu 1.5s ease-in-out infinite alternate;
+    }
+    @keyframes glowLampu {
+      0% {
+        filter: drop-shadow(0 0 8px var(--success)) drop-shadow(0 0 15px var(--success));
+      }
+      100% {
+        filter: drop-shadow(0 0 15px var(--success)) drop-shadow(0 0 25px var(--success));
+      }
+    }
+    .icon-kipas {
+      width: 70px;
+      height: 70px;
+      fill: var(--text);
+      transition: fill 0.4s ease, filter 0.4s ease;
+      transform-origin: 50% 50%;
+    }
+    .widget.on .icon-kipas {
+      fill: var(--success);
+      animation: spinKipas 1.8s linear infinite;
+      filter: drop-shadow(0 0 8px var(--success)) drop-shadow(0 0 15px var(--success));
+    }
+    @keyframes spinKipas {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .text {
+      font-size: 1.2rem;
+      margin-top: 10px;
+    }
+    .state {
+      font-size: 1.5rem;
+      margin-top: 4px;
+      font-weight: 700;
+      user-select: none;
+    }
+    @media (max-width: 600px) {
+      .dashboard {
+        grid-template-columns: 1fr;
+      }
+      .status {
+        flex-direction: column;
+        height: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard">
+    <div class="header">
+      <svg viewBox="0 0 64 80"><path d="M32 2 C50 2 60 22 60 45 C60 67 48 78 32 78 C16 78 4 67 4 45 C4 22 14 2 32 2 Z" /><path d="M30 15 L28 35 L35 30 L30 40 L38 42 L32 50" /></svg>
+      Smart Room Dashboard Inkubator Telor 
+    </div>
+
+    <div class="card">
+      <h2>Suhu</h2>
+      <div class="value" id="suhu">-- °C</div>
+    </div>
+
+    <div class="card">
+      <h2>Kelembaban</h2>
+      <div class="value" id="kelembaban">-- %</div>
+    </div>
+
+    <div class="card" style="grid-column: span 2;">
+      <h2>Status Perangkat</h2>
+      <div class="status">
+        <div class="widget off" id="lampu">
+          <svg class="icon-lampu" viewBox="0 0 24 40">
+            <path d="M12 2C8 6 8 14 8 20c0 4 3 8 4 8s4-4 4-8c0-6-4-14-4-18z" />
+            <rect x="10" y="28" width="4" height="6" rx="1" ry="1" />
+          </svg>
+          <div class="text">Lampu</div>
+          <div class="state">--</div>
+        </div>
+        <div class="widget off" id="kipas">
+          <svg class="icon-kipas" viewBox="0 0 64 64">
+            <circle cx="32" cy="32" r="6" />
+            <path d="M32 32 L32 2 M32 32 L62 32 M32 32 L32 62 M32 32 L2 32" stroke="currentColor" stroke-width="4" stroke-linecap="round" />
+            <path d="M44 20 L32 32 L20 44" stroke="currentColor" stroke-width="4" stroke-linecap="round" />
+          </svg>
+          <div class="text">Kipas</div>
+          <div class="state">--</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
+  <!-- Firebase Config + Data Binding -->
+  <script>
+    const firebaseConfig = {
+      databaseURL: "https://projectuas-b06b2-default-rtdb.asia-southeast1.firebasedatabase.app"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const suhuEl = document.getElementById('suhu');
+    const kelembabanEl = document.getElementById('kelembaban');
+    const lampuEl = document.getElementById('lampu');
+    const kipasEl = document.getElementById('kipas');
+
+    const stateText = (status) => status === "ON" ? "Hidup" : "Mati";
+
+    db.ref('monitoring').on('value', (snapshot) => {
+      const data = snapshot.val();
+      if (!data) return;
+
+      suhuEl.textContent = data.suhu + " °C";
+      kelembabanEl.textContent = data.kelembaban + " %";
+
+      lampuEl.classList.remove('on', 'off');
+      lampuEl.classList.add(data.lampu === "ON" ? 'on' : 'off');
+      lampuEl.querySelector('.state').textContent = stateText(data.lampu);
+
+      kipasEl.classList.remove('on', 'off');
+      kipasEl.classList.add(data.kipas === "ON" ? 'on' : 'off');
+      kipasEl.querySelector('.state').textContent = stateText(data.kipas);
+    });
+  </script>
+</body>
+</html>
